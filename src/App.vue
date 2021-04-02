@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <router-link to="./ok">點我</router-link>
-    <Validate rules="excluded:選項1" :name="`${option}`" v-slot="{ errors }">
+    <!-- <router-link to="./ok">點我</router-link> -->
+    <!-- <router-link to="ok">OK</router-link> -->
+    <router-view></router-view>
+    <!-- <Validate rules="excluded:選項1" :name="`${option}`" v-slot="{ errors }">
       <select v-model="option">
         <option value="選項1">選項1</option>
         <option value="選項2">選項2</option>
@@ -51,7 +53,7 @@
       <p>必填項目</p>
       <input type="text" v-model.trim="required" />
       <span>{{ errors[0] }}</span>
-    </Validate>
+    </Validate> -->
   </div>
 </template>
 

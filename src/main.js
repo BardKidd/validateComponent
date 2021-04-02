@@ -1,8 +1,22 @@
 import Vue from "vue";
 import App from "./App.vue";
-import "./router.js";
-import { ValidationProvider, extend, localize } from "vee-validate";
-import { required, email, excluded } from "vee-validate/dist/rules";
+import router from "./router";
+import {
+  ValidationProvider,
+  extend,
+  localize,
+  ValidationObserver,
+} from "vee-validate";
+import {
+  required,
+  email,
+  excluded,
+  alpha_num,
+  between,
+  min,
+  max,
+  confirmed,
+} from "vee-validate/dist/rules";
 
 import "bootstrap";
 import "bootstrap/scss/bootstrap.scss";
@@ -12,6 +26,45 @@ Vue.config.productionTip = false;
 // Vue.use(VueRouter);
 
 localize(tw);
+
+extend("confirmed", {
+  ...confirmed,
+  message: tw.messages.confirmed,
+  params: ["target"],
+});
+
+extend("myConfirmed", {
+  validate: (value, { newvalue }) => {
+    console.log(newvalue, value);
+
+    return value === newvalue;
+  },
+  message: "密碼不一致",
+  params: ["newvalue"],
+});
+
+extend("min", {
+  ...min,
+  message: "{_field_}需介於 6~16 個字元之間",
+  params: ["length"],
+});
+
+extend("max", {
+  ...max,
+  message: "{_field_}需介於 6~16 個字元之間",
+  params: ["length"],
+});
+
+extend("between", {
+  ...between,
+  message: tw.messages.between,
+  params: ["min", "max"],
+});
+
+extend("alpha_num", {
+  ...alpha_num,
+  message: "{_field_}欄位只為英數組成",
+});
 
 extend("email", {
   ...email,
@@ -23,9 +76,9 @@ extend("excluded", {
   message: tw.messages.excluded,
 });
 
-extend("availabletest", {
+extend("required", {
   ...required,
-  message: "此欄位為必填",
+  message: "不得輸入空白字元",
 });
 
 extend("secret", {
@@ -49,15 +102,15 @@ extend("odd", {
   message: "這是偶數...",
 });
 
-extend("min", {
-  validate: (value, { targetLength }) => {
-    console.log("value", value);
-    // console.log("args", args);
-    return value.length >= targetLength;
-  },
-  message: "我需要更大的值!!",
-  params: ["targetLength"],
-});
+// extend("min", {
+//   validate: (value, { targetLength }) => {
+//     console.log("value", value);
+//     // console.log("args", args);
+//     return value.length >= targetLength;
+//   },
+//   message: "我需要更大的值!!",
+//   params: ["targetLength"],
+// });
 
 extend("more", (value, values) => {
   console.log(values);
@@ -78,7 +131,9 @@ extend("requirs", {
 });
 
 Vue.component("Validate", ValidationProvider);
+Vue.component("Observer", ValidationObserver);
 
 new Vue({
+  router,
   render: (h) => h(App),
 }).$mount("#app");

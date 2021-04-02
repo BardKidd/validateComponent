@@ -5,7 +5,7 @@ Vue.use(VueRouter);
 export default new VueRouter({
   routes: [
     {
-      path: "/ok",
+      path: "/",
       name: "OK",
       component: () => import("./components/ok.vue"),
     },
