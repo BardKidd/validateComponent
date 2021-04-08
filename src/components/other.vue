@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <form @submit="send">
     <Validate
       rules="required|alpha_num|min:6|max:16"
       name="帳號"
@@ -21,16 +21,16 @@
     </Validate>
 
     <Validate
-      vid="password1"
       rules="alpha_num|required|min:6|max:16"
       v-slot="{ errors, failed, valid }"
       name="密碼"
       tag="div"
       class="row"
+      :vid="`${confirmation}`"
     >
       <label>密碼</label>
       <input
-        type="text"
+        type="password"
         v-model="confirmation"
         class="col-4"
         :class="{
@@ -40,47 +40,32 @@
       />
       <span class="text-danger">{{ errors[0] }}</span>
     </Validate>
-    <Validate :rules="`myConfirmed:${password}`" class="row">
+    <Validate
+      v-slot="{ errors, failed, valid }"
+      :rules="`confirmed:${confirmation}|required`"
+      class="row"
+      name="密碼"
+    >
       <label>確認密碼</label>
       <input
-        type="text"
+        type="password"
         v-model="password"
         class="col-4"
         :class="{
-          '': confirmation === '',
-          'is-invalid form-control': password !== confirmation,
-          'form-control is-valid':
-            password === confirmation && confirmation !== '',
+          'is-invalid form-control': failed,
+          'form-control is-valid': valid,
         }"
       />
-      <span class="text-danger" v-if="password !== confirmation"
-        >密碼不一致</span
-      >
+      <span class="text-danger">{{ errors[0] }}</span>
     </Validate>
-
-    <!-- <Validate
-      rules="required|alpha_num|min:6|max:16"
-      name="帳號"
-      v-slot="{ failedRules, classes }"
-      tag="div"
-      class="row"
-    >
-      <label>測試</label>
-      <input type="text" v-model="test" class="col-4" :class="classes" />
-      <span :class="{ 'text-danger': passed }">{{
-        Object.keys(failedRules)
-      }}</span>
-    </Validate> -->
-    <Observer v-slot="{ invalid }">
-      <other :invalid="invalid"></other>
-    </Observer>
-  </div>
+    <button type="submit" :disabled="invalid">送出</button>
+  </form>
 </template>
 
 <script>
-import other from "./other.vue";
 export default {
   name: "ok",
+  props: ["invalid"],
   data() {
     return {
       account: "",
@@ -89,8 +74,10 @@ export default {
       test: "",
     };
   },
-  components: {
-    other,
+  methods: {
+    send() {
+      alert("已送出");
+    },
   },
 };
 </script>

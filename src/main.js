@@ -6,6 +6,7 @@ import {
   extend,
   localize,
   ValidationObserver,
+  configure,
 } from "vee-validate";
 import {
   required,
@@ -26,6 +27,13 @@ Vue.config.productionTip = false;
 // Vue.use(VueRouter);
 
 localize(tw);
+
+configure({
+  classes: {
+    valid: "form-control is-valid",
+    failed: "is-invalid form-control",
+  },
+});
 
 extend("confirmed", {
   ...confirmed,
