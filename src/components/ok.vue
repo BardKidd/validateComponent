@@ -74,6 +74,73 @@
     <Observer v-slot="{ invalid }">
       <other :invalid="invalid"></other>
     </Observer>
+
+    <Observer v-slot="{ invalid }">
+      <div>
+        <input type="checkbox" name="no" id="no" v-model="no" />
+        <label for="no">不拘</label>
+      </div>
+      <div v-if="!no">
+        <Validate rules="required" v-slot="{ failed }">
+          <input type="checkbox" value="o1" v-model="os" />
+          <label>高中(職)</label>
+
+          <input type="checkbox" value="o2" v-model="os" />
+          <label>學士</label>
+
+          <input type="checkbox" value="o3" v-model="os" />
+          <label>碩士</label>
+
+          <input type="checkbox" value="o4" v-model="os" />
+          <label>博士</label>
+
+          <input type="checkbox" value="o5" v-model="os" />
+          <label>博士後</label>
+          <span class="text-danger" v-if="failed">請選擇學歷</span>
+        </Validate>
+      </div>
+      <button :disabled="invalid">送出</button>
+    </Observer>
+
+    <!-- <Observer v-for="(item, key) of students" :key="key">
+      <button @click="saveStudent(true)">新增</button>
+      <div>
+        <Validate>
+          <input
+            type="text"
+            placeholder="班級"
+            v-model="item.class"
+            @blur="saveStudent(false, item, key)"
+          />
+        </Validate>
+        <Validate>
+          <input
+            type="text"
+            placeholder="姓名"
+            v-model="item.name"
+            @blur="saveStudent(false, item, key)"
+          />
+        </Validate>
+        <Validate>
+          <input
+            type="text"
+            placeholder="學號"
+            v-model.lazy="item.number"
+            @blur="saveStudent(false, item, key)"
+          />
+        </Validate>
+      </div>
+      <p @click="saveStudent(false, item, key)">
+        {{ item.class }} / {{ item.name }} /
+        {{ item.number }}
+      </p>
+      <div>
+        <strong
+          >{{ students[key].class }} / {{ students[key].name }} /
+          {{ students[key].number }}</strong
+        >
+      </div>
+    </Observer> -->
   </div>
 </template>
 
@@ -87,8 +154,46 @@ export default {
       password: "",
       confirmation: "",
       test: "",
+      no: false,
+      os: [],
+      isNew: false,
+      student: {
+        class: "",
+        name: "",
+        number: "",
+      },
+      students: [
+        {
+          class: "國三勤",
+          name: "林霈文",
+          number: "10301032",
+        },
+      ],
     };
   },
+  methods: {
+    saveStudent(isNew, item, key) {
+      console.log("OK");
+      const vm = this;
+      if (!isNew) {
+        this.student = { ...item };
+      } else {
+        this.student = {};
+      }
+      vm.$set(this.students, key, this.student);
+    },
+  },
+  // watch: {
+  //   'student.class': (n) => {
+
+  //   }
+  // },
+  // computed: {
+  //   students() {
+  //     const vm = this;
+  //     return this.$set(vm.students, 0, vm.student)
+  //   }
+  // },
   components: {
     other,
   },
